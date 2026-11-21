@@ -60,6 +60,6 @@ public class MiniMeClient implements ClientModInitializer {
     }
 
     private static void msg(Minecraft mc, String s) {
-        if (mc.player != null) mc.player.displayClientMessage(Component.literal("[Mini] " + s), true);
+        if (mc.player != null) mc.player.sendSystemMessage(Component.literal("[Mini] " + s));
     }
 }

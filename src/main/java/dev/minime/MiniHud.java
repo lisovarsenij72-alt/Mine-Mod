@@ -35,7 +35,7 @@ public class MiniHud {
     public void draw(GuiGraphicsExtractor g, DeltaTracker delta) {
         Minecraft mc = Minecraft.getInstance();
         Config cfg = MiniMeClient.config;
-        if (mc.player == null || mc.options.hideGui || !cfg.enabled) return;
+        if (mc.player == null || !cfg.enabled) return;
 
         float pt = delta.getGameTimeDeltaPartialTick(false);
         long now = System.nanoTime();
