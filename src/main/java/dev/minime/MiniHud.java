@@ -1,10 +1,9 @@
 package dev.minime;
 
-import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElement;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -20,7 +19,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * Мини-компаньон рисуется как 2D-спрайт на HUD: позиция в мире -> проекция на экран.
  * Так мод не зависит от нестабильного API 3D-рендера.
  */
-public class MiniHud implements HudElement {
+public class MiniHud {
     record Bubble(String user, String text, long born) {}
     private static final List<Bubble> BUBBLES = new CopyOnWriteArrayList<>();
 
@@ -33,8 +32,7 @@ public class MiniHud implements HudElement {
     private Vec3 pos = null;
     private long lastNs = System.nanoTime();
 
-    @Override
-    public void render(GuiGraphics g, DeltaTracker delta) {
+    public void draw(GuiGraphicsExtractor g, DeltaTracker delta) {
         Minecraft mc = Minecraft.getInstance();
         Config cfg = MiniMeClient.config;
         if (mc.player == null || mc.options.hideGui || !cfg.enabled) return;
@@ -74,7 +72,7 @@ public class MiniHud implements HudElement {
         drawBubbles(g, mc.font, cfg, sx, sy - size / 2, size, w);
     }
 
-    private void drawCompanion(GuiGraphics g, Minecraft mc, String model, String skinName, int x, int y, int s) {
+    private void drawCompanion(GuiGraphicsExtractor g, Minecraft mc, String model, String skinName, int x, int y, int s) {
         if (model.equals("self")) {
             Identifier skin = SkinManager.resolve(mc, skinName);
             // лицо 8x8 + слой шапки 8x8 из скина 64x64
@@ -86,7 +84,7 @@ public class MiniHud implements HudElement {
         }
     }
 
-    private void drawBubbles(GuiGraphics g, Font font, Config cfg, int sx, int topY, int size, int screenW) {
+    private void drawBubbles(GuiGraphicsExtractor g, Font font, Config cfg, int sx, int topY, int size, int screenW) {
         long now = System.currentTimeMillis();
         long ttl = cfg.bubbleSeconds * 1000L;
         List<Bubble> live = new ArrayList<>();
@@ -130,9 +128,9 @@ public class MiniHud implements HudElement {
                     g.fill(tx + off + 1, ty + k, tx + off + 3 - (k > 2 ? 1 : 0), ty + k, a | 0xFFFFFF);
                 }
             }
-            g.drawString(font, b.user(), bx + 4, by + 3, a | 0x9146FF, false); // фиолетовый как Twitch
+            g.text(font, b.user(), bx + 4, by + 3, a | 0x9146FF, false); // фиолетовый как Twitch
             int ly = by + 13;
-            for (FormattedCharSequence l : lines) { g.drawString(font, l, bx + 4, ly, a | 0x000000, false); ly += 10; }
+            for (FormattedCharSequence l : lines) { g.text(font, l, bx + 4, ly, a | 0x000000, false); ly += 10; }
             g.pose().popMatrix();
 
             cursorY = by - 6; // следующий (старый) пузырь выше
