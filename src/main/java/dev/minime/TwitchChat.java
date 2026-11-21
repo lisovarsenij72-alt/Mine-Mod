@@ -47,7 +47,7 @@ public class TwitchChat {
                 socket = s;
                 BufferedReader in = new BufferedReader(new InputStreamReader(s.getInputStream(), StandardCharsets.UTF_8));
                 Writer out = new OutputStreamWriter(s.getOutputStream(), StandardCharsets.UTF_8);
-                send(out, tk == null ? "PASS SCHMOOCHIEPOO" : "PASS oauth:" + tk);
+                send(out, token == null ? "PASS SCHMOOCHIEPOO" : "PASS oauth:" + token);
                 send(out, "NICK " + nick);
                 send(out, "JOIN #" + channel);
                 String line;
