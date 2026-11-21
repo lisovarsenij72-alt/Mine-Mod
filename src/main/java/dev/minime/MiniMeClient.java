@@ -56,7 +56,7 @@ public class MiniMeClient implements ClientModInitializer {
             }
         });
 
-        HudElementRegistry.attachElementAfter(VanillaHudElements.CHAT, HUD_ID, new MiniHud());
+        HudElementRegistry.attachElementAfter(VanillaHudElements.CHAT, HUD_ID, new MiniHud()::draw);
     }
 
     private static void msg(Minecraft mc, String s) {
