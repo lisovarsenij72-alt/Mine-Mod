@@ -21,17 +21,14 @@ public class TwitchChat {
 
     public synchronized void connect(String channel, String nick, String token) {
         disconnect();
-        if (token == null || token.isBlank() || nick == null || nick.isBlank()) {
-            onStatus.accept("Twitch: укажите twitchNick и oauthToken в config/minime.json");
-            return;
-        }
         if (channel == null || channel.isBlank() || channel.equals("your_channel")) {
             onStatus.accept("Twitch: укажите channel в config/minime.json");
             return;
         }
         String ch = channel.toLowerCase().replace("#", "").trim();
-        String nk = nick.toLowerCase().trim();
-        String tk = token.trim().replaceFirst("(?i)^oauth:", "");
+        boolean anon = token == null || token.isBlank() || nick == null || nick.isBlank();
+        String nk = anon ? "justinfan" + (10000 + (int) (Math.random() * 80000)) : nick.toLowerCase().trim();
+        String tk = anon ? null : token.trim().replaceFirst("(?i)^oauth:", "");
         running = true;
         thread = new Thread(() -> loop(ch, nk, tk), "minime-twitch");
         thread.setDaemon(true);
@@ -50,7 +47,7 @@ public class TwitchChat {
                 socket = s;
                 BufferedReader in = new BufferedReader(new InputStreamReader(s.getInputStream(), StandardCharsets.UTF_8));
                 Writer out = new OutputStreamWriter(s.getOutputStream(), StandardCharsets.UTF_8);
-                send(out, "PASS oauth:" + token);
+                send(out, tk == null ? "PASS SCHMOOCHIEPOO" : "PASS oauth:" + tk);
                 send(out, "NICK " + nick);
                 send(out, "JOIN #" + channel);
                 String line;

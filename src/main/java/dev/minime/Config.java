@@ -9,7 +9,7 @@ public class Config {
     public String channel = "your_channel";   // канал, чей чат читаем (без #)
     public String twitchNick = "";            // ваш логин Twitch (аккаунт, которому выдан токен)
     public String oauthToken = "";            // OAuth-токен со скоупом chat:read. НИКОМУ не показывайте!
-    public String model = "self";             // self | tank | girl | имя из customModels
+    public String model = "self";             // self (3D) | head (2D) | tank | girl | имя из customModels
     public String skin = "own";               // own | имя файла из config/minime/skins (без .png)
     public List<String> customModels = new ArrayList<>();
     public int bubbleSeconds = 8;
@@ -34,7 +34,7 @@ public class Config {
         try { Files.writeString(FILE, GSON.toJson(this)); } catch (Exception e) { e.printStackTrace(); }
     }
     public List<String> allModels() {
-        List<String> l = new ArrayList<>(List.of("self", "tank", "girl")); l.addAll(customModels); return l;
+        List<String> l = new ArrayList<>(List.of("self", "head", "tank", "girl")); l.addAll(customModels); return l;
     }
     /** own + все PNG из config/minime/skins */
     public List<String> allSkins() {

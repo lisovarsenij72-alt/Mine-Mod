@@ -4,6 +4,7 @@ import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -74,6 +75,11 @@ public class MiniHud {
 
     private void drawCompanion(GuiGraphicsExtractor g, Minecraft mc, String model, String skinName, int x, int y, int s) {
         if (model.equals("self")) {
+            // НАСТОЯЩАЯ 3D-модель: рисуем игрока уменьшенным (как в инвентаре)
+            float cx = x + s / 2f, cy = y + s / 2f;
+            InventoryScreen.extractEntityInInventoryFollowsMouse(g, x - s / 2, y - s / 2, x + s + s / 2, y + s + s / 2,
+                    (int) (s * 0.8f), 0.0625f, cx + 25f, cy - s / 3f, mc.player);
+        } else if (model.equals("head")) {
             Identifier skin = SkinManager.resolve(mc, skinName);
             // лицо 8x8 + слой шапки 8x8 из скина 64x64
             g.blit(RenderPipelines.GUI_TEXTURED, skin, x, y, 8f, 8f, s, s, 8, 8, 64, 64);
